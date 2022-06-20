@@ -52,17 +52,19 @@ class LokiTransport extends Transport {
     })
 
     // Deconstruct the log
-    const { label, labels, timestamp, level, message, ...rest } = info
+    // XK 20June2022: Added "context"
+    const { label, labels, timestamp, level, context, message, ...rest } = info
 
-    // build custom labels if provided
-    let lokiLabels = { level: level }
-    lokiLabels = Object.assign(lokiLabels, labels)
+    // build custom labels if provided (including new "context")
+    let lokiLabels = { level: level, context: context }
 
     if (this.labels) {
       lokiLabels = Object.assign(lokiLabels, this.labels)
     } else {
       lokiLabels.job = label
     }
+
+    lokiLabels = Object.assign(lokiLabels, labels)
 
     // follow the format provided
     const line = this.useCustomFormat
