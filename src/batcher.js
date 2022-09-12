@@ -70,7 +70,10 @@ class Batcher {
 
     if (this.options.gracefulShutdown) {
       exitHook(callback => {
-        this.close(() => callback())
+      	// XK: Delay the exitHook "process.exit" for 2.5 seconds to finish up nestjs termination callbacks
+	setTimeout( () => {
+           this.close(() => callback())
+        }, 2500 );
       })
     }
   }
